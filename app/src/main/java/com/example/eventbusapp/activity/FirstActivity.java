@@ -1,13 +1,12 @@
 package com.example.eventbusapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eventbusapp.R;
 
@@ -30,8 +29,20 @@ public class FirstActivity extends AppCompatActivity {
         }
     }
 
-    static {
-        System.out.println("FirstActivity");
+    public static class ExceptionEvent2 {
+        Exception exception;
+
+        public ExceptionEvent2(Exception exception) {
+            this.exception = exception;
+        }
+
+        public Exception getException() {
+            return exception;
+        }
+
+        public void setException(Exception exception) {
+            this.exception = exception;
+        }
     }
 
     Button buttonDivide;
@@ -52,6 +63,8 @@ public class FirstActivity extends AppCompatActivity {
         editTextNumerador = findViewById(R.id.editTextNumerador);
         editTextDenominador = findViewById(R.id.editTextDenominador);
         editTextResultado = findViewById(R.id.editTextResultado);
+
+        Log.println(Log.VERBOSE, "EventBusTest", "FirstActivity: onCreate: ---");
     }
 
     public void executeSum(View view) {
@@ -61,15 +74,7 @@ public class FirstActivity extends AppCompatActivity {
             Double result = numerador / denominador;
             editTextResultado.setText(String.valueOf(result));
         } catch(Exception e) {
-            /*
-            try {
-                Intent intent = new Intent(this, SecondActivity.class);
-                startActivity(intent);
-            } finally {
-                EventBus.getDefault().post(new ExceptionEvent(e));
-            }
-            */
-            EventBus.getDefault().throwsException(new ExceptionEvent(e));
+            EventBus.getDefault(this).throwsException(new ExceptionEvent2(e));
         }
     }
 }

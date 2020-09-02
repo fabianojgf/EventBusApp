@@ -10,48 +10,47 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.eventbusapp.R;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.ExceptionalActionMode;
 import org.greenrobot.eventbus.ExceptionalThreadMode;
 import org.greenrobot.eventbus.Handle;
 
-public class SecondActivity extends AppCompatActivity {
-    TextView textViewResponse;
+public class ThirdActivity extends AppCompatActivity {
+    TextView textViewResponse3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
+        setContentView(R.layout.activity_third);
 
-        textViewResponse = findViewById(R.id.textViewResponse);
+        textViewResponse3 = findViewById(R.id.textViewResponse3);
 
-        Log.println(Log.VERBOSE, "EventBusTest", "SecondActivity: onCreate: ---");
+        Log.println(Log.VERBOSE, "EventBusTest", "ThirdActivity: onCreate: ---");
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Log.println(Log.VERBOSE, "EventBusTest", "SecondActivity: onStart: registerHandler");
+        Log.println(Log.VERBOSE, "EventBusTest", "ThirdActivity: onStart: registerHandler");
         EventBus.getDefault(this).registerHandler(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.println(Log.VERBOSE, "EventBusTest", "SecondActivity: onStop: unregisterHandler");
+        Log.println(Log.VERBOSE, "EventBusTest", "ThirdActivity: onStop: unregisterHandler");
         EventBus.getDefault(this).unregisterHandler(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //Log.println(Log.VERBOSE, "EventBusTest", "SecondActivity: onDestroy: unregisterHandler");
+        //Log.println(Log.VERBOSE, "EventBusTest", "ThirdActivity: onDestroy: unregisterHandler");
         //EventBus.getDefault(this).unregisterHandler(this);
     }
 
-    @Handle(threadMode = ExceptionalThreadMode.MAIN, actionMode = ExceptionalActionMode.START_AND_HANDLE)
+    @Handle(threadMode = ExceptionalThreadMode.MAIN)
     public void onExceptionEvent(FirstActivity.ExceptionEvent2 exceptionEvent) {
         /* Do something */
-        Log.println(Log.VERBOSE, "EventBusTest", "FirstActivity->SecondActivity: onExceptionEvent");
-        Toast.makeText(this, "[FA/SA] Ocorreu uma Exceção!", Toast.LENGTH_LONG).show();
+        Log.println(Log.VERBOSE, "EventBusTest", "FirstActivity->ThirdActivity: onExceptionEvent");
+        Toast.makeText(this, "[FA/TA] Ocorreu uma Exceção!", Toast.LENGTH_LONG).show();
     }
 }

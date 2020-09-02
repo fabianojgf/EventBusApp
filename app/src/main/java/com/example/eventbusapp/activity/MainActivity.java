@@ -1,7 +1,5 @@
 package com.example.eventbusapp.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,20 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.eventbusapp.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.ExceptionalThreadMode;
 import org.greenrobot.eventbus.Handle;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
     Button buttonIniciar;
-
-    static {
-        System.out.println("MainActivity");
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,33 +29,44 @@ public class MainActivity extends AppCompatActivity {
                 iniciar(v);
             }
         });
+
+        Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: onCreate: ---");
     }
 
     @Override
     public void onStart() {
-        EventBus.getDefault().registerHandler(this);
-        Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: registerHandler");
         super.onStart();
+        Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: registerHandler");
+        EventBus.getDefault(this).registerHandler(this);
     }
 
     @Override
     public void onStop() {
-        //EventBus.getDefault().unregister(this);
-        //Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: onStop: unregisterHandler");
         super.onStop();
+        //Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: onStop: unregisterHandler");
+        //EventBus.getDefault(this).unregister(this);
+
+        buttonIniciar.setText("Proxima");
     }
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregisterHandler(this);
-        Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: onDestroy: unregisterHandler");
         super.onDestroy();
+        Log.println(Log.VERBOSE, "EventBusTest", "MainActivity: onDestroy: unregisterHandler");
+        EventBus.getDefault(this).unregisterHandler(this);
     }
 
     @Handle(threadMode = ExceptionalThreadMode.MAIN)
     public void onExceptionEvent(FirstActivity.ExceptionEvent exceptionEvent) {
         Log.println(Log.VERBOSE, "EventBusTest", "FirstActivity->MainActivity: onExceptionEvent");
         Toast.makeText(this, "[MA] Ocorreu uma Exceção!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Handle(threadMode = ExceptionalThreadMode.MAIN)
+    public void onExceptionEvent(FirstActivity.ExceptionEvent2 exceptionEvent) {
+        /* Do something */
+        Log.println(Log.VERBOSE, "EventBusTest", "FirstActivity->MainActivity: onExceptionEvent");
+        Toast.makeText(this, "[FA/MA] Ocorreu uma Exceção!", Toast.LENGTH_LONG).show();
     }
 
     public void iniciar(View view) {
